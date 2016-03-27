@@ -8,7 +8,20 @@ const int NUM_SEVEN_SEGS = 5; //5 7 segment displays
 const int NUM_RGB_LINES = 3; //1 for each color
 const int NUM_LEDS_PER_ROW = 32; //max 32 LEDs per row (some have 30)
 //Seven Segment Characters           abcdefgh
+const unsigned char SEVEN_SEG_0 = 0b11111100;
 const unsigned char SEVEN_SEG_1 = 0b01100000;
+const unsigned char SEVEN_SEG_2 = 0b11011010;
+const unsigned char SEVEN_SEG_3 = 0b11110010;
+const unsigned char SEVEN_SEG_4 = 0b01100110;
+const unsigned char SEVEN_SEG_5 = 0b10110110;
+const unsigned char SEVEN_SEG_6 = 0b10111110;
+const unsigned char SEVEN_SEG_7 = 0b11100000;
+const unsigned char SEVEN_SEG_8 = 0b11111110;
+const unsigned char SEVEN_SEG_9 = 0b11110110;
+const unsigned char SEVEN_SEG_T = 0b00011110;
+const unsigned char SEVEN_SEG_J = 0b01111000;
+const unsigned char SEVEN_SEG_Q = 0b11111101;
+const unsigned char SEVEN_SEG_K = 0b01101110;
 //---------------------------------------------------
 
 //---------------------------------------------------
