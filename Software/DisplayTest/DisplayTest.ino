@@ -8,7 +8,7 @@ const int NUM_SEVEN_SEGS = 5; //5 7 segment displays
 const int NUM_RGB_LINES = 3; //1 for each color
 const int NUM_LEDS_PER_ROW = 32; //max 32 LEDs per row (some have 30)
 //Seven Segment Characters           abcdefgh
-const unsigned char SEVEN_SEG_1 = ~0b01100000;
+const unsigned char SEVEN_SEG_1 = 0b01100000;
 //---------------------------------------------------
 
 //---------------------------------------------------
@@ -49,7 +49,7 @@ int main()
   bool player = false;
   for(;;)
   {
-    updateDisplay(0,SEVEN_SEG_1,0,0,player,peg);
+    updateDisplay(0,SEVEN_SEG_1,1,0,player,peg);
     peg++;
     if(peg > 120)
     {
@@ -107,11 +107,11 @@ void updateDisplay(int button, unsigned char sevenChar, unsigned char sevenDispS
   {
     if(sevenChar & (1 << i))
     {
-      shiftOutLow();//Set Serial out low and cycle clock
+      shiftOutHigh();//Set Serial out low and cycle clock
     }
     else
     {
-      shiftOutHigh();//Set Serial out high and cycle clock
+      shiftOutLow();//Set Serial out high and cycle clock
     }
   }
   for(int i = 0; i < NUM_SEVEN_SEGS; i++)
@@ -155,21 +155,18 @@ void shiftOutHigh()
 {
   P1OUT = SERIAL_HIGH; //Serial clock low and serial data high
   P1OUT = SERIAL_HIGH_CLOCK; //Clock goes high
-  P1OUT = SERIAL_HIGH; //Serial clock low and serial data high
 }
 
 void pulseStorageClock()
 {
   P1OUT = 0;
   P1OUT = 1 << STORAGE_CLOCK_PIN; //Set Storage clock to high
-  P1OUT = 0; // set P1out to low
 }
 
 void shiftOutLow()
 {
   P1OUT = SERIAL_LOW; //Serial clock and serial data low
   P1OUT = SERIAL_LOW_CLOCK; //Clock goes high
-  P1OUT = SERIAL_LOW; //Serial clock and serial data low
 }
 
 //Returns the row that is used to display the peg
