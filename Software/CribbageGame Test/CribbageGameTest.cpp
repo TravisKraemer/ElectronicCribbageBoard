@@ -9,6 +9,32 @@ int main()
     checkPegs(game, 0, 0, -1, -1);
     game.addPoints(CribbageGame::P1, 5);
     checkPegs(game, 5, 0, 0, -1);
+    //Should revert to previous values
+    game.undoLastChange();
+    checkPegs(game, 0, 0, -1, -1);
+    //No undo history should not affect state
+    game.undoLastChange();
+    checkPegs(game, 0, 0, -1, -1);
+
+    game.addPoints(CribbageGame::P1, 11);
+    checkPegs(game, 11, 0, 0, -1);
+    game.addPoints(CribbageGame::P2, 15);
+    checkPegs(game, 11, 15, 0, 0);
+    game.addPoints(CribbageGame::P2, 3);
+    checkPegs(game, 11, 18, 0, 15);
+    game.addPoints(CribbageGame::P2, 29);
+    checkPegs(game, 40, 18, 29, 15);
+
+    game.undoLastChange();
+    checkPegs(game, 11, 18, 0, 15);
+    game.undoLastChange();
+    checkPegs(game, 11, 15, 0, 0);
+    game.undoLastChange();
+    checkPegs(game, 11, 0, 0, -1);
+    game.undoLastChange();
+    checkPegs(game, 0, 0, -1, -1);
+    game.undoLastChange();
+    checkPegs(game, 0, 0, -1, -1);
     return 0;
 }
 

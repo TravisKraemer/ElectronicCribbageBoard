@@ -8,7 +8,7 @@ class CribbageGame
 {
 private:
     static const unsigned char ARRAY_SIZE = 4;
-    static const unsigned char MAX_UNDOS = 1;
+    static const unsigned char MAX_UNDOS = 4;
     signed char pegs[ARRAY_SIZE][MAX_UNDOS + 1];
     //Needs 4 Bytes of RAM per UNDO
     unsigned char currentPosition;
