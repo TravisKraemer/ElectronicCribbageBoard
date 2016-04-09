@@ -1,7 +1,8 @@
+#include "CribbageGame.h"
 /**
 Default Constructor, initializes the peg locations and undo history data
 */
-CribbageGame::CribbageGame();
+CribbageGame::CribbageGame()
 {
     currentPosition = 0;
     numUndoLeft = 0;

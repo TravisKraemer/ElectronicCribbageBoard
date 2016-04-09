@@ -1,0 +1,1 @@
+g++ -c CribbageGame.cpp -o CribbageGame.o

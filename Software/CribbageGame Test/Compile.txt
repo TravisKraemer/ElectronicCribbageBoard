@@ -1,0 +1,1 @@
+g++ CribbageGameTest.cpp -o CribbageGameTest ../CribbageBoard/CribbageGame.o

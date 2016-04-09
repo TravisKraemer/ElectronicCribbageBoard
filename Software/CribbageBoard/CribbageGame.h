@@ -2,13 +2,15 @@
 This class stores the data for a cribbage game and has useful methods
 for keeping track of scoring.
 */
+#ifndef CribbageGame_H
+#define CribbageGame_H
 class CribbageGame
 {
 private:
-    signed char pegs[ARRAY_SIZE][MAX_UNDOS + 1];
     static const unsigned char ARRAY_SIZE = 4;
-    //Needs 4 Bytes of RAM per UNDO
     static const unsigned char MAX_UNDOS = 1;
+    signed char pegs[ARRAY_SIZE][MAX_UNDOS + 1];
+    //Needs 4 Bytes of RAM per UNDO
     unsigned char currentPosition;
     unsigned char numUndoLeft;
 public:
@@ -21,3 +23,4 @@ public:
     void addPoints(unsigned char player, signed char amount);
     bool undoLastChange();
 };
+#endif
