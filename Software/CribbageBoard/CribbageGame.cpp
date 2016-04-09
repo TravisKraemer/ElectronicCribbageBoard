@@ -33,6 +33,16 @@ void CribbageGame::addPoints(unsigned char player, signed char amount)
     unsigned char prevPosition = currentPosition;
     currentPosition = (currentPosition + 1) % (MAX_UNDOS + 1);
     numUndoLeft++;
+    if(player == P1)
+    {
+        pegs[P2 + BACK][currentPosition] = pegs[P2 + BACK][prevPosition];
+        pegs[P2 + FRONT][currentPosition] = pegs[P2 + FRONT][prevPosition];
+    }
+    else
+    {
+       pegs[P1 + BACK][currentPosition] = pegs[P1 + BACK][prevPosition];
+       pegs[P1 + FRONT][currentPosition] = pegs[P1 + FRONT][prevPosition];
+    }
     if(numUndoLeft > MAX_UNDOS)
     {
         numUndoLeft = MAX_UNDOS;
