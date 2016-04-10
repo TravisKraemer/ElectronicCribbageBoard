@@ -1,0 +1,1 @@
+"C:\Users\TravisS\Google Drive\Onedrive\Useful Programs\energia-0101E0017\hardware\tools\msp430\bin\msp430-g++.exe" -c -mmcu=msp430x CribbageGame.cpp -o CribbageGame.o

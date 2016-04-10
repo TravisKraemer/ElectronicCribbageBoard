@@ -2,8 +2,8 @@
 This class stores the data for a cribbage game and has useful methods
 for keeping track of scoring.
 */
-#ifndef CribbageGame_H
-#define CribbageGame_H
+#ifndef CRIBBAGEGAME_H
+#define CRIBBAGEGAME_H
 class CribbageGame
 {
 private:
