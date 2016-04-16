@@ -53,6 +53,10 @@ void CribbageGame::addPoints(unsigned char player, signed char amount)
         //This cannot be moved before previous statement in case MAX_UNDOS is 0
         //In that case, prevPosition == currentPosition and the two pegs would be equal
         pegs[player + FRONT][currentPosition] = amount + pegs[player + FRONT][prevPosition];
+        if( pegs[player + FRONT][currentPosition] > 121)
+        {
+             pegs[player + FRONT][currentPosition] = 121; //Max Score for cribbage
+        }
     }
     else
     {
