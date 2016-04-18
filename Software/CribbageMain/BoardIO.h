@@ -27,10 +27,15 @@ private:
 	static const int NUM_RGB_LINES = 3; //1 for each color
 	static const int NUM_LEDS_PER_ROW = 32; //max 32 LEDs per row (some have 30)
 	static const unsigned char SEVEN_SEG_NUMS[10];
+    static const unsigned char SEVEN_SEG_A = 0b11101110;
 	static const unsigned char SEVEN_SEG_T = 0b00011110;
 	static const unsigned char SEVEN_SEG_J = 0b01111000;
 	static const unsigned char SEVEN_SEG_Q = 0b11111101;
 	static const unsigned char SEVEN_SEG_K = 0b01101110;
+    static const unsigned char SEVEN_SEG_H = 0b01101110;
+    static const unsigned char SEVEN_SEG_D = 0b11111100;
+    static const unsigned char SEVEN_SEG_C = 0b10011100;
+    static const unsigned char SEVEN_SEG_S = 0b10110110;
     static const unsigned char SEVEN_SEG_BLANK = 0b00000000;
 	static const unsigned char BUTTON_DISABLE_TIME = 20;
     
@@ -82,6 +87,11 @@ private:
     *Initializes the data entered 
     */
     void initializeEntryData();
+    
+    /**
+    * Uses the entered data to set the seven segment displays appropriately
+    */
+    void updateSevenSegData()
 public:
     /**
     * This refreshes the display

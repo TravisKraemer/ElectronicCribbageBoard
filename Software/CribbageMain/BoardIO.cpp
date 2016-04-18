@@ -12,7 +12,7 @@
 #define BOARDIO_BUTTON_T_H 12
 #define BOARDIO_BUTTON_J_D 16
 #define BOARDIO_BUTTON_Q_S 4
-#define BOARDIO_BUTTON_K_C 18
+#define BOARDIO_BUTTON_K_C 8
 #define BOARDIO_BUTTON_P1 22
 #define BOARDIO_BUTTON_P2 21
 #define BOARDIO_BUTTON_UNDO 05
@@ -55,7 +55,7 @@ void BoardIO::initializeEntryData()
         enteredCards[i] = 0;
     }
     enteredCardSelected = 0;
-    currentCardSuitEntered = false;
+    currentCardSuitEntered = true;
 }
 
 /**
@@ -220,56 +220,56 @@ bool BoardIO::buttonPressed()
 */
 int BoardIO::calcRow(bool player2, int peg)
 {
-	if(peg < 1)
-	{
-		if(player2)
-		{
-			return 2;
-		}
-		else
-		{
-			return 1;
-		}
-		}
-		else
-		{
-		int row = ((peg - 1) / 30) * 2 + 1;
-		if(player2)
-		{
-			return row + 1;
-		}
-		else
-		{
-			return row;
-		}
-	}
+    if(peg < 1)
+    {
+        if(player2)
+        {
+            return 2;
+        }
+        else
+        {
+            return 1;
+        }
+        }
+        else
+        {
+        int row = ((peg - 1) / 30) * 2 + 1;
+        if(player2)
+        {
+            return row + 1;
+        }
+        else
+        {
+            return row;
+        }
+    }
 }
 
 //Returns the position of the peg 
 int BoardIO::calcLED(int peg)
 {
-	//1st stretch 
-	if(peg < 31)
-	{
-		return peg + 1;
-	}
-	//2nd Stretch reverses, 1st at 31
-	else if (peg < 61)
-	{
-		return 62 - peg;
-	}
-	//3rd Stretch going same directino as 1st
-	//61st peg at 2
-	else if (peg < 91)
-	{
-		return peg - 59;
-	}
-	//4th stretch, same direction as 2nd
-	//91st at 31, 120th at 2
-	else
-	{
-		return 122 - peg;
-	}
+    //1st stretch 
+    if(peg < 31)
+    {
+        return peg + 1;
+    }
+    //2nd Stretch reverses, 1st at 31
+    else if (peg < 61)
+    {
+        return 62 - peg;
+    }
+    //3rd Stretch going same directino as 1st
+    //61st peg at 2
+    else if (peg < 91)
+    {
+        return peg - 59;
+    }
+    //4th stretch, same direction as 2nd
+    //91st at 31, 120th at 2
+    else
+    {
+        return 122 - peg;
+    }
 }
 
 /**
@@ -277,14 +277,10 @@ int BoardIO::calcLED(int peg)
 */
 void BoardIO::handleButton()
 {
-	unsigned char disp1 = buttonEnabled % 10;
-	unsigned char disp2 = buttonEnabled / 10;
-	sevenSegments[0] = SEVEN_SEG_NUMS[disp1];
-	sevenSegments[1] = SEVEN_SEG_NUMS[disp2];
     unsigned char buttonNum = 10;
-	switch( buttonEnabled )
-	{
-		case BOARDIO_BUTTON_0:
+    switch( buttonEnabled )
+    {
+        case BOARDIO_BUTTON_0:
             if(entryMode == MANUAL_SCORE_ENTRY_MODE)
             {
                 enteredScore = 10 * enteredScore;
@@ -292,110 +288,118 @@ void BoardIO::handleButton()
                     enteredScore = 0;
             }
             break;
-		case BOARDIO_BUTTON_1:
+        case BOARDIO_BUTTON_1:
             buttonNum--;//Subtract 9 from 10 = 1
-		case BOARDIO_BUTTON_2:
+        case BOARDIO_BUTTON_2:
             buttonNum--;
-		case BOARDIO_BUTTON_3:
+        case BOARDIO_BUTTON_3:
             buttonNum--;
-		case BOARDIO_BUTTON_4:
+        case BOARDIO_BUTTON_4:
             buttonNum--;
-		case BOARDIO_BUTTON_5:
+        case BOARDIO_BUTTON_5:
             buttonNum--;
-		case BOARDIO_BUTTON_6:
+        case BOARDIO_BUTTON_6:
             buttonNum--;
-		case BOARDIO_BUTTON_7:
+        case BOARDIO_BUTTON_7:
             buttonNum--;
-		case BOARDIO_BUTTON_8:
+        case BOARDIO_BUTTON_8:
             buttonNum --;//Subtract 2 from 10 = 2
-		case BOARDIO_BUTTON_9:
+        case BOARDIO_BUTTON_9:
             buttonNum--;//Subtract 1 from 10 = 9
-			if(entryMode == MANUAL_SCORE_ENTRY_MODE)
+            if(entryMode == MANUAL_SCORE_ENTRY_MODE)
             {
                 buttonNum = 10 * enteredScore + buttonNum;
                 if(buttonNum <= MAX_HAND_SCORE)
                     enteredScore = buttonNum;
             }
-            else if(entryMode == HAND_ENTRY_MODE)
+            else if(entryMode == HAND_ENTRY_MODE && currentCardSuitEntered)
             {
                 enteredCards[enteredCardSelected] = buttonNum--;
                 currentCardSuitEntered = false;
             }
-			break;
-		case BOARDIO_BUTTON_T_H:
+            break;
+        case BOARDIO_BUTTON_T_H:
             if(entryMode == HAND_ENTRY_MODE)
             {
                 if(currentCardSuitEntered)
                 {
-                    enteredCardSelected += HEARTS * SUIT_OFFSET;
+                    enteredCards[enteredCardSelected] += HEARTS * SUIT_OFFSET;
+                    currentCardSuitEntered = true;
+                    enteredCardSelected = (enteredCardSelected + 1) % 5;
                 }
                 else
                 {
                     enteredCards[enteredCardSelected] = TEN;
+                    currentCardSuitEntered = false;
                 }
-                currentCardSuitEntered = false;
             }
-			break;
-		case BOARDIO_BUTTON_J_D:
+            break;
+        case BOARDIO_BUTTON_J_D:
             if(entryMode == HAND_ENTRY_MODE)
             {
                 if(currentCardSuitEntered)
                 {
-                    enteredCardSelected += DIAMONDS * SUIT_OFFSET;
+                    enteredCards[enteredCardSelected] += DIAMONDS * SUIT_OFFSET;
+                    currentCardSuitEntered = true;
+                    enteredCardSelected = (enteredCardSelected + 1) % 5;
                 }
                 else
                 {
                     enteredCards[enteredCardSelected] = JACK;
+                    currentCardSuitEntered = false;
                 }
-                currentCardSuitEntered = false;
             }
-			break;
-		case BOARDIO_BUTTON_Q_S:
-			if(entryMode == HAND_ENTRY_MODE)
-            {
-                if(currentCardSuitEntered)
-                {
-                    enteredCardSelected += SPADES * SUIT_OFFSET;
-                }
-                else
-                {
-                    enteredCards[enteredCardSelected] = QUEEN;
-                }
-                currentCardSuitEntered = false;
-            }
-			break;
-		case BOARDIO_BUTTON_K_C:
+            break;
+        case BOARDIO_BUTTON_Q_S:
             if(entryMode == HAND_ENTRY_MODE)
             {
                 if(currentCardSuitEntered)
                 {
-                    enteredCardSelected += CLUBS * SUIT_OFFSET;
+                    enteredCards[enteredCardSelected] += SPADES * SUIT_OFFSET;
+                    currentCardSuitEntered = true;
+                    enteredCardSelected = (enteredCardSelected + 1) % 5;
+                }
+                else
+                {
+                    enteredCards[enteredCardSelected] = QUEEN;
+                    currentCardSuitEntered = false;
+                }
+            }
+            break;
+        case BOARDIO_BUTTON_K_C:
+            if(entryMode == HAND_ENTRY_MODE)
+            {
+                if(currentCardSuitEntered)
+                {
+                    enteredCards[enteredCardSelected] += CLUBS * SUIT_OFFSET;
+                    currentCardSuitEntered = true;
+                    enteredCardSelected = (enteredCardSelected + 1) % 5;
                 }
                 else
                 {
                     enteredCards[enteredCardSelected] = KING;
+                    currentCardSuitEntered = false;
                 }
-                currentCardSuitEntered = false;
             }
-			break;
-		case BOARDIO_BUTTON_UP:
-		case BOARDIO_BUTTON_UP_FAR:
-			if(entryMode == MANUAL_SCORE_ENTRY_MODE)
+            break;
+        case BOARDIO_BUTTON_UP:
+        case BOARDIO_BUTTON_UP_FAR:
+            if(entryMode == MANUAL_SCORE_ENTRY_MODE)
             {
                 enteredScore++;
                 if(enteredScore > MAX_HAND_SCORE)
                     enteredScore--;
             }
-			break;
-		case BOARDIO_BUTTON_DOWN:
-		case BOARDIO_BUTTON_DOWN_FAR:
+            break;
+        case BOARDIO_BUTTON_DOWN:
+        case BOARDIO_BUTTON_DOWN_FAR:
             if(entryMode == MANUAL_SCORE_ENTRY_MODE)
             {
                 enteredScore--;
                 if(enteredScore < 0)
                     enteredScore = 0;
             }
-			break;
+            break;
         case BOARDIO_BUTTON_P1:
             if(entryMode == MANUAL_SCORE_ENTRY_MODE)
             {
@@ -420,12 +424,90 @@ void BoardIO::handleButton()
                 //game.addPoints(CribbageGame::P2, score);
             }
             initializeEntryData();
-			break;
+            break;
         case BOARDIO_BUTTON_UNDO:
             game.undoLastChange();
-			break;
+            break;
         case BOARDIO_BUTTON_MODE:
             entryMode = (entryMode + 1) % NUM_MODES;
-			break;
-	}
+            break;
+    }
+    updateSevenSegData();
+}
+
+/**
+* Uses the entered data to set the seven segment displays appropriately
+*/
+void BoardIO::updateSevenSegData()
+{
+    if(entryMode == MANUAL_SCORE_ENTRY_MODE)
+    {
+        unsigned char disp1 = enteredScore % 10;
+        unsigned char disp2 = enteredScore / 10;
+        sevenSegments[0] = SEVEN_SEG_NUMS[disp1];
+        sevenSegments[1] = SEVEN_SEG_NUMS[disp2];
+    }
+    else
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            if(cardSuitEntered && i < enteredCardSelected)
+            {
+                switch(enteredCards[i] % SUIT_OFFSET)
+                {
+                    case 1:
+                        sevenSegments[5-i] = SEVEN_SEG_A;
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                        sevenSegments[5-i] = SEVEN_SEG_NUMS[enteredCards[i] % SUIT_OFFSET];
+                        break;
+                    case 10:
+                        sevenSegments[5-i] = SEVEN_SEG_T;
+                        break;
+                    case 11:
+                        sevenSegments[5-i] = SEVEN_SEG_J;
+                        break;
+                    case 12:
+                        sevenSegments[5-i] = SEVEN_SEG_Q;
+                        break;
+                    case 13:
+                        sevenSegments[5-i] = SEVEN_SEG_K;
+                        break;
+                    default:
+                        sevenSegments[5-i] = SEVEN_SEG_BLANK;
+                }
+            }
+            else if(!cardSuitEntered && i < enteredCardSelected )
+            {
+                switch(enteredCards[i] % SUIT_OFFSET)
+                {
+                    case HEARTS:
+                        sevenSegments[5-i] = SEVEN_SEG_H;
+                        break;
+                    case DIAMONDS:
+                        sevenSegments[5-i] = SEVEN_SEG_D;
+                        break;
+                    case SPADES:
+                        sevenSegments[5-i] = SEVEN_SEG_S;
+                        break;
+                    case CLUBS:
+                        sevenSegments[5-i] = SEVEN_SEG_C;
+                        break;
+                    default:
+                        sevenSegments[5-i] = SEVEN_SEG_BLANK;
+                }
+            }
+            else
+            {
+                sevenSegments[5-i] = SEVEN_SEG_BLANK;
+            }
+        }
+    }
 }
