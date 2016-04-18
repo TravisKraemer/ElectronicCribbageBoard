@@ -109,7 +109,6 @@ void BoardIO::updateDisplay()
         }
         else
         {
-            rgb = 6; //Red + Green
         }
     }
     else
@@ -471,7 +470,7 @@ void BoardIO::updateSevenSegData()
                     case 6:
                     case 7:
                     case 8:
-                        sevenSegments[4-i] = SEVEN_SEG_NUMS[enteredCards[i] % SUIT_OFFSET];
+                        sevenSegments[4-i] = SEVEN_SEG_NUMS[(enteredCards[i] % SUIT_OFFSET) + 1];
                         break;
                     case 9:
                         sevenSegments[4-i] = SEVEN_SEG_T;
