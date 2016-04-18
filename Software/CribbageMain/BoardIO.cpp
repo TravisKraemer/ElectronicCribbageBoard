@@ -105,11 +105,11 @@ void BoardIO::updateDisplay()
         rowPosition = 10; // Don't display anything on board
         if(player2)
         {
-            rgb = 4; //Blue
+            rgb = 1; //Blue
         }
         else
         {
-            rgb = 3; //Red + Green
+            rgb = 6; //Red + Green
         }
     }
     else
@@ -316,7 +316,7 @@ void BoardIO::handleButton()
             }
             else if(entryMode == HAND_ENTRY_MODE && currentCardSuitEntered)
             {
-                enteredCards[enteredCardSelected] = buttonNum--;
+                enteredCards[enteredCardSelected] = --buttonNum;
                 currentCardSuitEntered = false;
             }
             break;
@@ -448,6 +448,9 @@ void BoardIO::updateSevenSegData()
         unsigned char disp2 = enteredScore / 10;
         sevenSegments[0] = SEVEN_SEG_NUMS[disp1];
         sevenSegments[1] = SEVEN_SEG_NUMS[disp2];
+        sevenSegments[2] = SEVEN_SEG_BLANK;
+        sevenSegments[3] = SEVEN_SEG_BLANK;
+        sevenSegments[4] = SEVEN_SEG_BLANK;
     }
     else if(entryMode == HAND_ENTRY_MODE)
     {
@@ -457,9 +460,10 @@ void BoardIO::updateSevenSegData()
             {
                 switch(enteredCards[i] % SUIT_OFFSET)
                 {
-                    case 1:
+                    case 0:
                         sevenSegments[4-i] = SEVEN_SEG_A;
                         break;
+                    case 1:
                     case 2:
                     case 3:
                     case 4:
@@ -467,28 +471,27 @@ void BoardIO::updateSevenSegData()
                     case 6:
                     case 7:
                     case 8:
-                    case 9:
                         sevenSegments[4-i] = SEVEN_SEG_NUMS[enteredCards[i] % SUIT_OFFSET];
                         break;
-                    case 10:
+                    case 9:
                         sevenSegments[4-i] = SEVEN_SEG_T;
                         break;
-                    case 11:
+                    case 10:
                         sevenSegments[4-i] = SEVEN_SEG_J;
                         break;
-                    case 12:
+                    case 11:
                         sevenSegments[4-i] = SEVEN_SEG_Q;
                         break;
-                    case 13:
+                    case 12:
                         sevenSegments[4-i] = SEVEN_SEG_K;
                         break;
                     default:
                         sevenSegments[4-i] = SEVEN_SEG_BLANK;
                 }
             }
-            else if(!currentCardSuitEntered && i < enteredCardSelected )
+            else if(!currentCardSuitEntered && (i < enteredCardSelected ))
             {
-                switch(enteredCards[i] % SUIT_OFFSET)
+                switch(enteredCards[i] / SUIT_OFFSET)
                 {
                     case HEARTS:
                         sevenSegments[4-i] = SEVEN_SEG_H;
