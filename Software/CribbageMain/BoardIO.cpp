@@ -1,27 +1,27 @@
 #include "BoardIO.h"
-#define BOARDIO_BUTTON_0 21
-#define BOARDIO_BUTTON_1 1
-#define BOARDIO_BUTTON_2 2
-#define BOARDIO_BUTTON_3 3
-#define BOARDIO_BUTTON_4 4
-#define BOARDIO_BUTTON_5 5
-#define BOARDIO_BUTTON_6 6
-#define BOARDIO_BUTTON_7 7
-#define BOARDIO_BUTTON_8 8
-#define BOARDIO_BUTTON_9 9
-#define BOARDIO_BUTTON_T 10
-#define BOARDIO_BUTTON_J 11
-#define BOARDIO_BUTTON_Q 12
-#define BOARDIO_BUTTON_K 13
-#define BOARDIO_BUTTON_P1 14
-#define BOARDIO_BUTTON_P2 15
-#define BOARDIO_BUTTON_UNDO 16
-#define BOARDIO_BUTTON_UP 17
-#define BOARDIO_BUTTON_UP_FAR 18
-#define BOARDIO_BUTTON_DOWN 19
-#define BOARDIO_BUTTON_DOWN_FAR 20
-#define BOARDIO_BUTTON_P2_FAR 22
-#define BOARDIO_BUTTON_SCORE 23
+#define BOARDIO_BUTTON_0 6
+#define BOARDIO_BUTTON_1 9
+#define BOARDIO_BUTTON_2 10
+#define BOARDIO_BUTTON_3 11
+#define BOARDIO_BUTTON_4 13
+#define BOARDIO_BUTTON_5 14
+#define BOARDIO_BUTTON_6 15
+#define BOARDIO_BUTTON_7 1
+#define BOARDIO_BUTTON_8 2
+#define BOARDIO_BUTTON_9 3
+#define BOARDIO_BUTTON_T 12
+#define BOARDIO_BUTTON_J 16
+#define BOARDIO_BUTTON_Q 4
+#define BOARDIO_BUTTON_K 18
+#define BOARDIO_BUTTON_P1 22
+#define BOARDIO_BUTTON_P2 21
+#define BOARDIO_BUTTON_UNDO 05
+#define BOARDIO_BUTTON_UP 23
+#define BOARDIO_BUTTON_UP_FAR 19
+#define BOARDIO_BUTTON_DOWN 20
+#define BOARDIO_BUTTON_DOWN_FAR 18
+#define BOARDIO_BUTTON_P2_FAR 17
+#define BOARDIO_BUTTON_SCORE 7
 
 const unsigned char BoardIO::SEVEN_SEG_NUMS[10] = {0b11111100, 0b01100000, 0b11011010,
                                                 0b11110010, 0b01100110, 0b10110110, 0b10111110, 
@@ -31,6 +31,7 @@ const unsigned char BoardIO::SEVEN_SEG_NUMS[10] = {0b11111100, 0b01100000, 0b110
 */
 BoardIO::BoardIO()
 {
+    P1DIR = (1 << SHIFT_CLOCK_PIN) | (1 << SERIAL_DATA_PIN) | (1 << STORAGE_CLOCK_PIN);
     game = CribbageGame();
     for(int i = 0; i < NUM_SEVEN_SEGS; i++)
     {
@@ -67,12 +68,12 @@ void BoardIO::updateDisplay()
         player2 = false;
         peg = game.getPegLocation(CribbageGame::P1, CribbageGame::FRONT);
     }
-    else if((displayState % 4) == 0)
+    else if((displayState % 4) == 1)
     {
         player2 = false;
         peg = game.getPegLocation(CribbageGame::P1, CribbageGame::BACK);
     }
-    else if((displayState % 4) == 0)
+    else if((displayState % 4) == 2)
     {
         player2 = true;
         peg = game.getPegLocation(CribbageGame::P2, CribbageGame::FRONT);
@@ -101,7 +102,7 @@ void BoardIO::updateDisplay()
         rowPosition = calcLED(peg);
     }
     unsigned char sevenDispSelect = displayState % 5;
-    buttonEnabled++;
+    buttonEnabled = (buttonEnabled + 1) % NUM_BUTTONS;
     for(int i = 1; i <= NUM_BUTTONS; i++)
     {
         if(i == buttonEnabled)
@@ -192,7 +193,7 @@ void BoardIO::pulseStorageClock()
 
 bool BoardIO::buttonPressed()
 {
-    return ((P1IN & (1 << BUTTON_IN_PIN)) == 0);
+    return ((P1IN & (1 << BUTTON_IN_PIN)));
 }
 
 /**Returns the row that is used to display the peg

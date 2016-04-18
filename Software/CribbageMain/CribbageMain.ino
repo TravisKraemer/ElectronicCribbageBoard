@@ -13,7 +13,7 @@ int main()
     for(;;)
     {
         io.updateDisplay();
-        delay2(10);
+        delay2(1);
     }
     return 0;
 }

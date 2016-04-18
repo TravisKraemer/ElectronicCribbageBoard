@@ -4,7 +4,6 @@ for keeping track of scoring.
 */
 #ifndef CRIBBAGEGAME_H
 #define CRIBBAGEGAME_H
-#include <msp430.h>
 class CribbageGame
 {
 private:
