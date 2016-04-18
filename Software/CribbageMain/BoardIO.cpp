@@ -41,6 +41,7 @@ BoardIO::BoardIO()
     buttonEnabled = 0;
     buttonDisableDelay = 0;
     initializeEntryData();
+    updateSevenSegData();
 }
 
 /**
@@ -283,9 +284,10 @@ void BoardIO::handleButton()
         case BOARDIO_BUTTON_0:
             if(entryMode == MANUAL_SCORE_ENTRY_MODE)
             {
-                enteredScore = 10 * enteredScore;
-                if(enteredScore > MAX_HAND_SCORE)
+                if(enteredScore > 2)
                     enteredScore = 0;
+                else
+                    enteredScore *= 10;
             }
             break;
         case BOARDIO_BUTTON_1:
@@ -321,7 +323,7 @@ void BoardIO::handleButton()
         case BOARDIO_BUTTON_T_H:
             if(entryMode == HAND_ENTRY_MODE)
             {
-                if(currentCardSuitEntered)
+                if(!currentCardSuitEntered)
                 {
                     enteredCards[enteredCardSelected] += HEARTS * SUIT_OFFSET;
                     currentCardSuitEntered = true;
@@ -337,7 +339,7 @@ void BoardIO::handleButton()
         case BOARDIO_BUTTON_J_D:
             if(entryMode == HAND_ENTRY_MODE)
             {
-                if(currentCardSuitEntered)
+                if(!currentCardSuitEntered)
                 {
                     enteredCards[enteredCardSelected] += DIAMONDS * SUIT_OFFSET;
                     currentCardSuitEntered = true;
@@ -353,7 +355,7 @@ void BoardIO::handleButton()
         case BOARDIO_BUTTON_Q_S:
             if(entryMode == HAND_ENTRY_MODE)
             {
-                if(currentCardSuitEntered)
+                if(!currentCardSuitEntered)
                 {
                     enteredCards[enteredCardSelected] += SPADES * SUIT_OFFSET;
                     currentCardSuitEntered = true;
@@ -369,7 +371,7 @@ void BoardIO::handleButton()
         case BOARDIO_BUTTON_K_C:
             if(entryMode == HAND_ENTRY_MODE)
             {
-                if(currentCardSuitEntered)
+                if(!currentCardSuitEntered)
                 {
                     enteredCards[enteredCardSelected] += CLUBS * SUIT_OFFSET;
                     currentCardSuitEntered = true;
@@ -401,7 +403,7 @@ void BoardIO::handleButton()
             }
             break;
         case BOARDIO_BUTTON_P1:
-            if(entryMode == MANUAL_SCORE_ENTRY_MODE)
+            if(entryMode == MANUAL_SCORE_ENTRY_MODE && enteredScore != 0)
             {
                 game.addPoints(CribbageGame::P1, enteredScore);
             }
@@ -411,10 +413,10 @@ void BoardIO::handleButton()
                 //game.addPoints(CribbageGame::P1, score);
             }
             initializeEntryData();
-            break
+            break;
         case BOARDIO_BUTTON_P2:            
         case BOARDIO_BUTTON_P2_FAR:
-            if(entryMode == MANUAL_SCORE_ENTRY_MODE)
+            if(entryMode == MANUAL_SCORE_ENTRY_MODE && enteredScore != 0)
             {
                 game.addPoints(CribbageGame::P2, enteredScore);
             }
@@ -447,16 +449,16 @@ void BoardIO::updateSevenSegData()
         sevenSegments[0] = SEVEN_SEG_NUMS[disp1];
         sevenSegments[1] = SEVEN_SEG_NUMS[disp2];
     }
-    else
+    else if(entryMode == HAND_ENTRY_MODE)
     {
         for(int i = 0; i < 5; i++)
         {
-            if(cardSuitEntered && i < enteredCardSelected)
+            if(currentCardSuitEntered && i < enteredCardSelected)
             {
                 switch(enteredCards[i] % SUIT_OFFSET)
                 {
                     case 1:
-                        sevenSegments[5-i] = SEVEN_SEG_A;
+                        sevenSegments[4-i] = SEVEN_SEG_A;
                         break;
                     case 2:
                     case 3:
@@ -466,47 +468,47 @@ void BoardIO::updateSevenSegData()
                     case 7:
                     case 8:
                     case 9:
-                        sevenSegments[5-i] = SEVEN_SEG_NUMS[enteredCards[i] % SUIT_OFFSET];
+                        sevenSegments[4-i] = SEVEN_SEG_NUMS[enteredCards[i] % SUIT_OFFSET];
                         break;
                     case 10:
-                        sevenSegments[5-i] = SEVEN_SEG_T;
+                        sevenSegments[4-i] = SEVEN_SEG_T;
                         break;
                     case 11:
-                        sevenSegments[5-i] = SEVEN_SEG_J;
+                        sevenSegments[4-i] = SEVEN_SEG_J;
                         break;
                     case 12:
-                        sevenSegments[5-i] = SEVEN_SEG_Q;
+                        sevenSegments[4-i] = SEVEN_SEG_Q;
                         break;
                     case 13:
-                        sevenSegments[5-i] = SEVEN_SEG_K;
+                        sevenSegments[4-i] = SEVEN_SEG_K;
                         break;
                     default:
-                        sevenSegments[5-i] = SEVEN_SEG_BLANK;
+                        sevenSegments[4-i] = SEVEN_SEG_BLANK;
                 }
             }
-            else if(!cardSuitEntered && i < enteredCardSelected )
+            else if(!currentCardSuitEntered && i < enteredCardSelected )
             {
                 switch(enteredCards[i] % SUIT_OFFSET)
                 {
                     case HEARTS:
-                        sevenSegments[5-i] = SEVEN_SEG_H;
+                        sevenSegments[4-i] = SEVEN_SEG_H;
                         break;
                     case DIAMONDS:
-                        sevenSegments[5-i] = SEVEN_SEG_D;
+                        sevenSegments[4-i] = SEVEN_SEG_D;
                         break;
                     case SPADES:
-                        sevenSegments[5-i] = SEVEN_SEG_S;
+                        sevenSegments[4-i] = SEVEN_SEG_S;
                         break;
                     case CLUBS:
-                        sevenSegments[5-i] = SEVEN_SEG_C;
+                        sevenSegments[4-i] = SEVEN_SEG_C;
                         break;
                     default:
-                        sevenSegments[5-i] = SEVEN_SEG_BLANK;
+                        sevenSegments[4-i] = SEVEN_SEG_BLANK;
                 }
             }
             else
             {
-                sevenSegments[5-i] = SEVEN_SEG_BLANK;
+                sevenSegments[4-i] = SEVEN_SEG_BLANK;
             }
         }
     }

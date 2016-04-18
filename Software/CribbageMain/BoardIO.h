@@ -37,14 +37,14 @@ private:
     static const unsigned char SEVEN_SEG_C = 0b10011100;
     static const unsigned char SEVEN_SEG_S = 0b10110110;
     static const unsigned char SEVEN_SEG_BLANK = 0b00000000;
-	static const unsigned char BUTTON_DISABLE_TIME = 20;
+	static const unsigned char BUTTON_DISABLE_TIME = 100;
     
     //---------------------------------------------------
 	//Entry Constants
 	//---------------------------------------------------
     static const unsigned char MANUAL_SCORE_ENTRY_MODE = 0;
     static const unsigned char HAND_ENTRY_MODE = 1;
-    static const unsigned char NUM_MODES = 1;
+    static const unsigned char NUM_MODES = 2;
     static const unsigned char MAX_HAND_SCORE = 29;
     static const unsigned char TEN = 9;
     static const unsigned char JACK = 10;
@@ -91,7 +91,7 @@ private:
     /**
     * Uses the entered data to set the seven segment displays appropriately
     */
-    void updateSevenSegData()
+    void updateSevenSegData();
 public:
     /**
     * This refreshes the display
