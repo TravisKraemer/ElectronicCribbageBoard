@@ -109,6 +109,7 @@ void BoardIO::updateDisplay()
         }
         else
         {
+            rgb = 4; //Red
         }
     }
     else
